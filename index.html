@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jwèt Kesyon Kreyòl</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 30px; }
+        .ka { background: white; padding: 25px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 500px; width: 100%; }
+        .opsyon { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        button { padding: 12px; font-size: 16px; cursor: pointer; border: 2px solid #007bff; border-radius: 5px; background: white; color: #007bff; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #007bff; color: white; }
+        #mesaj { font-size: 20px; font-weight: bold; margin-top: 20px; }
+        
+        /* Bouton pou fen jwèt la */
+        .btn-pataje { background-color: #25D366; color: white; border: none; padding: 15px; margin-top: 15px; border-radius: 5px; font-size: 18px; width: 100%; display: inline-block; text-decoration: none; }
+        .btn-pataje:hover { background-color: #128C7E; color: white; }
+        .btn-fb { background-color: #1877F2; color: white; border: none; padding: 15px; margin-top: 10px; border-radius: 5px; font-size: 18px; width: 100%; display: inline-block; text-decoration: none; }
+        .btn-fb:hover { background-color: #135cb7; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="ka" id="kontenè-jwèt">
+    <h3 id="nivo">Pati: 1/15</h3>
+    <h2 id="kesyon">Ki koulè drapo peyi Ayiti?</h2>
+    <div id="opsyon-feso" class="opsyon"></div>
+    <div id="mesaj"></div>
+</div>
+
+<script>
+// Lis 15 kesyon yo
+const jwet = [
+    {k:"Ki koulè drapo peyi Ayiti?", o:["Vè ak Jòn", "Ble ak Wouj", "Blan ak Nwa"], r:"Ble ak Wouj"},
+    {k:"Ki bèt ki pi rapid sou tè a?", o:["Guépard", "Lyon", "Chwal"], r:"Guépard"},
+    {k:"Konbe mwa ki gen 31 jou nan yon ane?", o:["5 mwa", "6 mwa", "7 mwa"], r:"7 mwa"},
+    {k:"Ki kapital peyi Ayiti?", o:["Kap Ayisyen", "Pòtoprens", "Sen Mak"], r:"Pòtoprens"},
+    {k:"Nan ki ane Ayiti te pran endepandans li?", o:["1804", "1791", "1825"], r:"1804"},
+    {k:"Ki pi gwo planèt nan sistèm solè nou an?", o:["Tè a", "Mars", "Jupiter"], r:"Jupiter"},
+    {k:"Konbe jwè ki genyen nan yon ekip foutbòl sou teren an?", o:["9 jwè", "11 jwè", "12 jwè"], r:"11 jwè"},
+    {k:"Ki lang ofisyèl yo pale an Ayiti?", o:["Kreyòl ak Franse", "Kreyòl sèlman", "Kreyòl ak Anglè"], r:"Kreyòl ak Franse"},
+    {k:"Ki sa ki bay kò a enèji pi vit?", o:["Dlo", "Glisid (Sik)", "Vitaminn"], r:"Glisid (Sik)"},
+    {k:"Ki pi gwo oseyan sou latè?", o:["Oseyan Atlantik", "Oseyan Endyen", "Oseyan Pasifik"], r:"Oseyan Pasifik"},
+    {k:"Ki metal yo itilize plis pou fè fil kouran elektrik?", o:["Fè", "Kiv (Cuivre)", "Aliminyòm"], r:"Kiv (Cuivre)"},
+    {k:"Ki bèt ki reprezante senbòl lapè?", o:["Koulèv", "Toutrèl / Pijon", "Lajistis"], r:"Toutrèl / Pijon"},
+    {k:"Ki planèt yo rele 'Planèt Wouj' la?", o:["Mars", "Vénus", "Mercure"], r:"Mars"},
+    {k:"Ki non premye anperè Ayiti a?", o:["Toussaint Louverture", "Jean-Jacques Dessalines", "Henri Christophe"], r:"Jean-Jacques Dessalines"},
+    {k:"Ki sa ki pi lejè nan sa yo?", o:["Koton", "Plon", "Dlo"], r:"Koton"}
+];
+
+let i = 0;
+
+// Fonksyon pou fè yon son 'Bip' selebrasyon
+function feSonBravo() {
+    try {
+        let kontex = new (window.AudioContext || window.webkitAudioContext)();
+        let osc1 = kontex.createOscillator();
+        let gain1 = kontex.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(523.25, kontex.currentTime);
+        gain1.gain.setValueAtTime(0.1, kontex.currentTime);
+        osc1.connect(gain1);
+        gain1.connect(kontex.destination);
+        osc1.start();
+        osc1.stop(kontex.currentTime + 0.1);
+        
+        setTimeout(() => {
+            let osc2 = kontex.createOscillator();
+            let gain2 = kontex.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(659.25, kontex.currentTime);
+            gain2.gain.setValueAtTime(0.1, kontex.currentTime);
+            osc2.connect(gain2);
+            gain2.connect(kontex.destination);
+            osc2.start();
+            osc2.stop(kontex.currentTime + 0.3);
+        }, 100);
+    } catch(e) {
+        console.log("Navigatè a bloke son an.");
+    }
+}
+
+function chaje() {
+    if(i < jwet.length) {
+        document.getElementById("nivo").innerText = `Pati: ${i+1}/${jwet.length}`;
+        document.getElementById("kesyon").innerText = jwet[i].k;
+        let f = document.getElementById("opsyon-feso"); f.innerHTML = "";
+        
+        jwet[i].o.forEach(op => {
+            let b = document.createElement("button"); 
+            b.innerText = op;
+            b.onclick = () => {
+                if(op === jwet[i].r) {
+                    document.getElementById("mesaj").innerHTML = "<span style='color: green;'>🎉 Bravo! 🥳</span>";
+                    feSonBravo();
+                    
+                    let v = new SpeechSynthesisUtterance("Bravo!"); 
+                    v.lang = "fr-FR"; 
+                    v.volume = 1; 
+                    window.speechSynthesis.speak(v);
+                    
+                    i++; 
+                    setTimeout(chaje, 1500);
+                } else { 
+                    document.getElementById("mesaj").innerHTML = "<span style='color: red;'>❌ Re-esye!</span>"; 
+                }
+            };
+            f.appendChild(b);
+        });
+        document.getElementById("mesaj").innerText = "";
+    } else { 
+        // Lè jwèt la fini, nou kreye mesaj pataje a otomatikman
+        let lyenJwet = window.location.href; // Sa ap pran lyen kote jwèt la ye a otomatikman
+        let mesajWhatsApp = encodeURIComponent(`Mwen fè 15/15 nan Jwèt Kesyon Kreyòl la! 😎 Teste konesans ou tou pou w wè si w ka bat mwen: ${lyenJwet}`);
+        
+        // Chanje kontni an anndan bwat la
+        document.getElementById("kontenè-jwèt").innerHTML = `
+            <h2>🏆 Ou Fini Jwèt la! Ou reponn tout 15 kesyon yo! 🏆</h2>
+            <p style="font-size: 16px; color: #555;">Defye zanmi w pou w wè si y ap ka fè menm nòt avè w!</p>
+            
+            <a href="https://api.whatsapp.com/send?text=${mesajWhatsApp}" target="_blank" class="btn-pataje">
+                🟢 Pataje sou WhatsApp
+            </a>
+            
+            <!-- Chanje lyen sa a ak lyen reyèl paj Facebook ou a -->
+            <a href="https://www.facebook.com/" target="_blank" class="btn-fb">
+                👍 Swiv nou sou Facebook
+            </a>
+        `; 
+    }
+}
+
+chaje();
+</script>
+
+</body>
+</html>
